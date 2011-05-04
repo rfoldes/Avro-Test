@@ -1,0 +1,4 @@
+A simple test of Avro capabilities including: 
+* dynamic typing - serialization and deserialization without code generation
+* untagged data - storing schema with untagged data in a binary file resulting in more compact data encoding
+* schema evolution - using different schemas for serialization and deserialization and see how missing/extra/modified fields are handled
