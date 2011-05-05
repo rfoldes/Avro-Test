@@ -14,10 +14,14 @@ import org.apache.avro.io.Encoder;
 import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.util.Utf8;
 
+/**
+ * A simple entity used to test Avro schema evolution properties.
+ *
+ */
 class Employee
 {
-	public static Schema SCHEMA;
-	public static Schema SCHEMA2;
+	public static Schema SCHEMA;	//writer's schema
+	public static Schema SCHEMA2;	//reader's schema
 	
 	static {
 		try {
@@ -42,6 +46,10 @@ class Employee
 		this.boss = b;
 	}
 	
+	/**
+	 * This method serializes the java object into Avro record.
+	 * @return Avro generic record
+	 */
 	public GenericData.Record serialize() {
 		  GenericData.Record record = new GenericData.Record(SCHEMA);
 
@@ -61,6 +69,12 @@ class Employee
 		  return record;
 		}
 
+	/**
+	 * Writes out Java objects into a binary Avro-encoded file
+	 * @param file where to store serialized Avro records
+	 * @param people is an array of objects to be serialized
+	 * @throws IOException
+	 */
 	public static void testWrite(File file, Employee[] people) throws IOException {
 		   GenericDatumWriter datum = new GenericDatumWriter(Employee.SCHEMA);
 		   DataFileWriter writer = new DataFileWriter(datum);
@@ -74,7 +88,13 @@ class Employee
 
 		   writer.close();
 		}	
-
+	
+	/**
+	 * Writes out Java objects into a JSON-encoded file
+	 * @param file where to store serialized Avro records
+	 * @param people people is an array of objects to be serialized
+	 * @throws IOException
+	 */
 	public static void testJsonWrite(File file, Employee[] people) throws IOException {
 	    GenericDatumWriter writer = new GenericDatumWriter(Employee.SCHEMA);
 	    Encoder e = EncoderFactory.get().jsonEncoder(Employee.SCHEMA, new FileOutputStream(file));
@@ -85,6 +105,11 @@ class Employee
 	   e.flush();
 	}	
 
+	/**
+	 * Reads in binary Avro-encoded entities using the schema stored in the file and prints them out.
+	 * @param file
+	 * @throws IOException
+	 */
 	public static void testRead(File file) throws IOException {
 		GenericDatumReader datum = new GenericDatumReader();
 		DataFileReader reader = new DataFileReader(file, datum);
@@ -100,6 +125,11 @@ class Employee
 		reader.close();
 	}
 	
+	/**
+	 * Reads in binary Avro-encoded entities using a schema that is different from the writer's schema.
+	 * @param file
+	 * @throws IOException
+	 */
 	public static void testRead2(File file) throws IOException {
 	   GenericDatumReader datum = new GenericDatumReader(Employee.SCHEMA2);
 	   DataFileReader reader = new DataFileReader(file, datum);
