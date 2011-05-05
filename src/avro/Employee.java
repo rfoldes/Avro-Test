@@ -108,7 +108,7 @@ class Employee
 	   while (reader.hasNext()) {
 	     reader.next(record);
 	     System.out.println("Name " + record.get("name") + 
-	    		 			" " + record.get("old") + " yrs old " +		    		 
+	    		 			" " + record.get("yrs") + " yrs old " +		    		 
 			                " Gender " + record.get("gender") +
 			                " @ "+record.get("emails"));
 	   }
